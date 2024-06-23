@@ -1,6 +1,5 @@
 #include<iostream>
 #include <ctime>
-#include <string>
 #include <sstream>
 using namespace std;
 
@@ -14,23 +13,25 @@ struct User {
 struct Room {
     int roomId;
     string roomType;
-    double pricePerDaye;
+    double pricePerDay;
     bool isBooked;
 };
 
 struct Booking {
     int bookingId;
     int roomId;
-    string guestName;
+    double price;
+    string persons;
+    string name;
     string checkInDate;
     string checkOutDate;
 };
 
 User Info[] = {{name: "Saad", password: "123"},{name: "Ali", password: "12345"}};
-Room RoomInfo[] = {{1, "Standard", 1000.0, false},{2, "Deluxe", 1500.0, false},{3, "Suite", 2000.0, false}};
+Room RoomInfo[] = {{1, "Standard", 1000.0, false},{2, "Deluxe", 1500.0, true},{3, "Suite", 2000.0, false}};
 Booking BookingInfo[] = {
-    {1, 101, "John Doe", "2024-07-01", "2024-07-05"},
-    {2, 102, "Alice Smith", "2024-07-03", "2024-07-08"}
+    {1, 101, 1000, "2", "John Doe", "2024-07-01", "2024-07-05"},
+//    {2, 102, "Alice Smith", "2024-07-03", "2024-07-08"}
 };
 
 string currentDate() {
@@ -45,6 +46,22 @@ string currentDate() {
 	return currentDateStr.str();
 }
 
+void displayRooms() {
+  cout << endl;
+  int roomInfo_lenght = sizeof(RoomInfo) / sizeof(RoomInfo[0]);
+  for (int i = 0; i < roomInfo_lenght; i++) {
+    cout << "Room ID: " << RoomInfo[i].roomId << endl;
+    cout << "Room Type: " << RoomInfo[i].roomType << endl;
+    cout << "Price Per Day: " << RoomInfo[i].pricePerDay << endl;
+    if (RoomInfo[i].isBooked == 1) {
+    	 cout << "Available: " << "No" << endl << endl;
+	} else {
+		 cout << "Available: " << "Yes"  << endl << endl;
+	}
+  }
+    cout << endl;
+}
+
 int viewBookings() {
 	int bookingInfo_lenght = sizeof(BookingInfo) / sizeof(BookingInfo[0]);	
 	if (bookingInfo_lenght > 0) {
@@ -54,7 +71,9 @@ int viewBookings() {
 		 for (int i = 0; i < bookingInfo_lenght; i++) {
 		 	cout << "Booking ID: " << BookingInfo[i].bookingId << endl;
             cout << "Room ID: " << BookingInfo[i].roomId << endl;
-            cout << "Guest Name: " << BookingInfo[i].guestName << endl;
+            cout << "Name: " << BookingInfo[i].name << endl;
+            cout << "Price: " << BookingInfo[i].price << endl;
+            cout << "Persons: " << BookingInfo[i].persons << endl;
             cout << "Check-in Date: " << BookingInfo[i].checkInDate << endl;
             cout << "Check-out Date: " << BookingInfo[i].checkOutDate << endl << endl;
 		 }
@@ -71,12 +90,77 @@ int viewBookings() {
 		 }
 	}
 	else {
-		cout << "You have no bookings." << endl;
+		cout << "You have no bookings at the moment." << endl;
+		while (true) {
+		 	int booking_exit = 0;
+		    cout<<"Press 1 to exit a booking: ";
+		    cin>>booking_exit;
+		    if (booking_exit == 1) {
+		    	return booking_exit;
+			}
+			else {
+				continue;
+			}
+		 }
 	}
 }
 
-void bookRoom() {
-	cout<<"Book Room!";
+int bookRoom() {
+	cout<<"Welcome to Room Booking!";
+	cout << endl;
+	displayRooms();
+	
+	while (true) {
+	  cout<<"1. To Book a room"<<endl;
+	  cout<<"2. To Exit a booking of rooms"<<endl;
+	  int book_room_option = 0;
+	  cout<<"Press: ";
+	  cin>>book_room_option;
+	  if (book_room_option == 1) {
+	  	cout<<"Room Booking"<<endl;
+	  	int bookingId, roomId, days;
+	  	double price;
+        string name, checkInDate, checkOutDate, persons;
+        int roomInfo_lenght = sizeof(RoomInfo) / sizeof(RoomInfo[0]);
+        string current = currentDate();
+        cout<<"Enter Room Id: ";
+        cin>>roomId;
+        for (int i = 0; i < roomInfo_lenght; i++) {
+        	if (roomId == RoomInfo[i].roomId) {
+        		if (RoomInfo[i].isBooked == 1) {
+        			cout<< RoomInfo[i].roomType <<" room is already booked"<<endl;
+        			cout<<endl;
+				} else {
+					cout<<"Room Is Available"<<endl;
+					cout<<"Enter your name : ";
+                    cin>>name;
+                    cout<<"How many days will you stay? : ";
+                    cin>>days;
+                    cout<<"How many persons are with you? : ";
+                    cin>>persons;
+                    cout<<endl;
+                    int bookingInfo_lenght = sizeof(BookingInfo) / sizeof(BookingInfo[0]);
+                    BookingInfo[0].bookingId = bookingInfo_lenght;
+                    BookingInfo[0].roomId = roomId;
+                    BookingInfo[0].price = days * price;
+                    BookingInfo[0].persons = persons;
+                    BookingInfo[0].name = name;
+                    BookingInfo[0].checkInDate = current;
+                    BookingInfo[0].checkOutDate = current;
+                    cout<<"Room Booked SuccessFully"<<endl;
+                    cout<<endl;
+					return 1;               
+				}
+			}
+		}
+	  }
+	  else if (book_room_option == 2) {
+	  	return 1;
+	  }
+	  else {
+	  	continue;
+	  }
+	}
 }
 
 int main(){
@@ -106,6 +190,7 @@ int main(){
 	    for (int i = 0; i < info_lenght; i++) {
 		  if (Info[i].name == name && Info[i].password == password) {
 			cout<<"Login Successfully!"<<endl;
+			cout<<endl;
 			loginSuccess = true;
 			checkCondition = 1;
             break;
@@ -144,7 +229,6 @@ int main(){
 		Info[1].phoneNumber = phoneNumber;
 		Info[1].address = address;
 		Info[1].password = password;
-//		checkCondition = 1;
 	}
 	else {
 		cout<<"Password and confirm password does not match.";
@@ -172,7 +256,10 @@ int main(){
         cin>>option;
         
         if (option == 1) {
-        	return 0;
+        	int roomBooking = bookRoom();
+        	if (roomBooking == 1) {
+				continue;
+			}
 		}
 		else if (option == 2) {
 			int booking = viewBookings();
