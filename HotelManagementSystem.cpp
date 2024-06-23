@@ -256,22 +256,21 @@ int checkOut() {
 int main(){
 	while (true) {
 	cout<<endl;
-	cout<<"Welcome To Pearl Continential Hotel"<<endl;
+	cout<<"Welcome To Hotel Management System!"<<endl;
 	int checkAuth = 0;
 	int checkCondition = 0;
 	cout<<"Log In / Sign Up"<<endl;
 	cout<<"1. Login"<<endl;
 	cout<<"2. Signup"<<endl;
 	cout<<"3. Exit"<<endl;
-	cout<<"Press : ";
+	cout<<"Option: ";
 	cin>>checkAuth;
 	cout<<endl;
-	if (checkAuth == 1) {
 	string name, password;
 	bool loginSuccess = false; 
 	int attempts = 3;
 	int info_lenght = sizeof(Info) / sizeof(Info[0]);
-	
+	if (checkAuth == 1) {	
 	while (attempts > 0 && !loginSuccess) {
 	    cout<<"Login In"<<endl;
 	    cout<<"Enter your name: ";
@@ -346,7 +345,8 @@ int main(){
         cout << "2. My Bookings" << endl;
         cout << "3. CheckIn" << endl;
         cout << "4. CheckOut" << endl;
-        cout << "5. Logout" << endl;
+        cout << "5. View Profile" << endl;
+        cout << "6. Logout" << endl;
         cout<<"Option: ";
         cin>>option;
         
@@ -389,6 +389,56 @@ int main(){
 			}
 		}
 		else if (option == 5) {
+		  cout<<endl;
+	      cout<<"Profile Details!"<<endl;
+	      int userinfo_length = sizeof(Info) / sizeof(Info[0]);
+	
+	      for (int i = 0; i < userinfo_length; i++) {
+		     if (Info[i].name == name) {
+			   cout<<"Name : "<<Info[i].name<<endl;
+			   cout<<"Password : "<<Info[i].password<<endl;
+			   cout<<"Phone Number : "<<Info[i].phoneNumber<<endl;
+			   cout<<"Address : "<<Info[i].address<<endl;
+			   cout<<endl;
+	    	}
+	     }
+		
+	    cout<<"1. To Update a profile detail."<<endl;
+	    cout<<"2. To exit a profile detail."<<endl;
+	    int option = 0;
+	    cout<<"Option: ";
+	    cin>>option;
+	    if (option == 1) {
+	    	cout<<endl;
+		    cout<<"Update Profile Detail:"<<endl;
+		    for (int i = 0; i < userinfo_length; i++) {
+	    	if (Info[i].name == name) {
+			  string user_name, password, address;
+	          long long phoneNumber;
+		      cout<<"Enter your name : ";
+			  cin>>user_name;
+			  cout<<"Enter your password : ";
+		  	  cin>>password;
+			  cout<<"Enter your phone number : ";
+			  cin>>phoneNumber;
+			  cout<<"Enter your address : ";
+			  cin>>address;
+			
+			  Info[i].name = user_name;
+			  Info[i].password = password;
+			  Info[i].phoneNumber = phoneNumber;
+			  Info[i].address = address;
+			  name = user_name;
+			  cout<<"Profile Update Successfully!"<<endl;
+		     }
+	       }
+	       continue;
+	     }
+	      else {
+		     continue;
+	     }
+		}
+		else if (option == 6) {
 			cout<<"Logout Successfully!";
 			exit;
 		}
