@@ -25,14 +25,14 @@ struct Booking {
     string name;
     string checkInDate;
     string checkOutDate;
+    bool checkedIn;
 };
 
 User Info[] = {{name: "Saad", password: "123"},{name: "Ali", password: "12345"}};
-Room RoomInfo[] = {{1, "Standard", 1000.0, false},{2, "Deluxe", 1500.0, true},{3, "Suite", 2000.0, false}};
-Booking BookingInfo[] = {
-    {1, 101, 1000, "2", "John Doe", "2024-07-01", "2024-07-05"},
-//    {2, 102, "Alice Smith", "2024-07-03", "2024-07-08"}
-};
+Room RoomInfo[] = {{1, "Standard", 1000.0, false},{2, "Deluxe", 1500.0, false},{3, "Suite", 2000.0, false}};
+Booking BookingInfo[] = {{}};
+//    {1, 101, 1000, "2", "John Doe", "2024-07-01", "2024-07-05", true},
+
 
 string currentDate() {
 	time_t now = time(NULL);
@@ -142,11 +142,13 @@ int bookRoom() {
                     int bookingInfo_lenght = sizeof(BookingInfo) / sizeof(BookingInfo[0]);
                     BookingInfo[0].bookingId = bookingInfo_lenght;
                     BookingInfo[0].roomId = roomId;
-                    BookingInfo[0].price = days * price;
+                    BookingInfo[0].price = price * days;
                     BookingInfo[0].persons = persons;
                     BookingInfo[0].name = name;
                     BookingInfo[0].checkInDate = current;
                     BookingInfo[0].checkOutDate = current;
+                    BookingInfo[0].checkedIn = false;
+                    RoomInfo[i].isBooked = true;
                     cout<<"Room Booked SuccessFully"<<endl;
                     cout<<endl;
 					return 1;               
@@ -163,6 +165,49 @@ int bookRoom() {
 	}
 }
 
+int checkIn() {
+	cout<<endl;
+	cout<<"Check In"<<endl;
+	while (true) {
+		int bookingId;
+        cout << "Enter your Booking ID to check in: ";
+        cin >> bookingId;
+    
+        bool bookingFound = false;
+        int bookingInfo_lenght = sizeof(BookingInfo) / sizeof(BookingInfo[0]);
+        string current = currentDate();
+        for (int i = 0; i < bookingInfo_lenght; i++) {
+           if (BookingInfo[i].bookingId == bookingId) {
+            BookingInfo[i].checkedIn = true;
+            BookingInfo[i].checkInDate = current;
+            bookingFound = true;
+            cout << "Check-in successful for Booking ID: " << bookingId << endl;
+            return 1;
+            break;
+        }
+    }
+
+      if (!bookingFound) {
+        cout << "Invalid Booking ID or already checked in." << endl;
+        cout<<endl;
+        cout<<"1. To Continue"<<endl;
+        cout<<"2. To exit a CheckIn"<<endl;
+        int option = 0;
+        cout<<"Option : ";
+        cin>>option;
+        if (option == 1) {
+        	continue;
+		}
+		else if (option == 2) {
+			return 1;
+		}
+		else {
+			cout<<"Entetet";
+		}
+      }
+   }
+}
+
 int main(){
 	while (true) {
 	cout<<endl;
@@ -173,7 +218,9 @@ int main(){
 	cout<<"1. Login"<<endl;
 	cout<<"2. Signup"<<endl;
 	cout<<"3. Exit"<<endl;
+	cout<<"Press : ";
 	cin>>checkAuth;
+	cout<<endl;
 	if (checkAuth == 1) {
 	string name, password;
 	bool loginSuccess = false; 
@@ -248,10 +295,13 @@ int main(){
 		cout << "Welcome, " << Info[0].name << ". ";
 		while (true) {
 		int option = 0;
+		cout<<endl;
 		cout <<"Please choose an option:" << endl;
         cout << "1. Book a Room" << endl;
-        cout << "2. View old Bookings" << endl;
-        cout << "4. Logout" << endl;
+        cout << "2. My Bookings" << endl;
+        cout << "3. CheckIn" << endl;
+        cout << "4. CheckOut" << endl;
+        cout << "5. Logout" << endl;
         cout<<"Option: ";
         cin>>option;
         
@@ -267,6 +317,24 @@ int main(){
 				continue;
 			}
 		}
+		else if (option == 3) {
+			int bookingInfo_lenght = sizeof(BookingInfo) / sizeof(BookingInfo[0]);
+			if (BookingInfo[0].name != "") {
+			   int checkedIn = checkIn();
+			   if (checkedIn == 1) {
+				continue;
+			   }  
+			}
+			else {
+				cout<<"You have not booked any room yet. You need to book a room first before you can check in."<<endl;
+				continue;
+			}
+			
+		}
+		else if (option == 5) {
+			cout<<"Logout Successfully!";
+			exit;
+		}
 		else {
 			cout<<"Another number not supported!";
 			continue;
@@ -279,11 +347,6 @@ int main(){
 	}
 	}
 } 
-
-
-
-//		 string current = currentDate();
-//		 cout << "Current date: " << current << endl;
 
 
 
