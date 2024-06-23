@@ -28,11 +28,9 @@ struct Booking {
     bool checkedIn;
 };
 
-User Info[] = {{name: "Saad", password: "123"},{name: "Ali", password: "12345"}};
+User Info[] = {{name: "Saad", password: "123", 12321, "Aisha Bawani"},{name: "Ali", password: "12345", 12321, "Aisha Bawani"}};
 Room RoomInfo[] = {{1, "Standard", 1000.0, false},{2, "Deluxe", 1500.0, false},{3, "Suite", 2000.0, false}};
 Booking BookingInfo[] = {{}};
-//    {1, 101, 1000, "2", "John Doe", "2024-07-01", "2024-07-05", true},
-
 
 string currentDate() {
 	time_t now = time(NULL);
@@ -74,6 +72,12 @@ int viewBookings() {
             cout << "Name: " << BookingInfo[i].name << endl;
             cout << "Price: " << BookingInfo[i].price << endl;
             cout << "Persons: " << BookingInfo[i].persons << endl;
+            if (BookingInfo[i].checkedIn == 1) {
+               cout << "Checked In: " << "true" << endl;
+			}
+			else {
+			   cout << "Checked In: " << "false" << endl;
+			}
             cout << "Check-in Date: " << BookingInfo[i].checkInDate << endl;
             cout << "Check-out Date: " << BookingInfo[i].checkOutDate << endl << endl;
 		 }
@@ -145,8 +149,8 @@ int bookRoom() {
                     BookingInfo[0].price = price * days;
                     BookingInfo[0].persons = persons;
                     BookingInfo[0].name = name;
-                    BookingInfo[0].checkInDate = current;
-                    BookingInfo[0].checkOutDate = current;
+                    BookingInfo[0].checkInDate = "";
+                    BookingInfo[0].checkOutDate = "";
                     BookingInfo[0].checkedIn = false;
                     RoomInfo[i].isBooked = true;
                     cout<<"Room Booked SuccessFully"<<endl;
@@ -172,7 +176,6 @@ int checkIn() {
 		int bookingId;
         cout << "Enter your Booking ID to check in: ";
         cin >> bookingId;
-    
         bool bookingFound = false;
         int bookingInfo_lenght = sizeof(BookingInfo) / sizeof(BookingInfo[0]);
         string current = currentDate();
@@ -186,7 +189,6 @@ int checkIn() {
             break;
         }
     }
-
       if (!bookingFound) {
         cout << "Invalid Booking ID or already checked in." << endl;
         cout<<endl;
@@ -202,7 +204,50 @@ int checkIn() {
 			return 1;
 		}
 		else {
-			cout<<"Entetet";
+			continue;
+		}
+      }
+   }
+}
+
+int checkOut() {
+	cout<<endl;
+	cout<<"Check Out"<<endl;
+	while (true) {
+		int bookingId;
+        cout << "Enter your Booking ID to check out: ";
+        cin >> bookingId;
+    
+        bool bookingFound = false;
+        int bookingInfo_lenght = sizeof(BookingInfo) / sizeof(BookingInfo[0]);
+        string current = currentDate();
+        for (int i = 0; i < bookingInfo_lenght; i++) {
+           if (BookingInfo[i].bookingId == bookingId) {
+            BookingInfo[i].checkedIn = false;
+            BookingInfo[i].checkOutDate = current;
+            bookingFound = true;
+            cout << "Check-out successful for Booking ID: " << bookingId << endl;
+            return 1;
+            break;
+        }
+    }
+
+      if (!bookingFound) {
+        cout << "Invalid Booking ID or already checked out." << endl;
+        cout<<endl;
+        cout<<"1. To Continue"<<endl;
+        cout<<"2. To exit a CheckIn"<<endl;
+        int option = 0;
+        cout<<"Option : ";
+        cin>>option;
+        if (option == 1) {
+        	continue;
+		}
+		else if (option == 2) {
+			return 1;
+		}
+		else {
+			continue;
 		}
       }
    }
@@ -257,7 +302,7 @@ int main(){
 	else if (checkAuth == 2) {
 	string name, password, confirmPassword, address;
 	long long phoneNumber;
-	cout<<"Sign UP"<<endl;
+	cout<<"Sign Up"<<endl;
 	cout<<"Enter Name: ";
 	cin>>name;
 	cout<<"Enter Phone Number: ";
@@ -329,7 +374,19 @@ int main(){
 				cout<<"You have not booked any room yet. You need to book a room first before you can check in."<<endl;
 				continue;
 			}
-			
+		}
+		else if (option == 4) {
+			int bookingInfo_lenght = sizeof(BookingInfo) / sizeof(BookingInfo[0]);
+			if (BookingInfo[0].name != "") {
+			   int checkedOut = checkOut();
+			   if (checkedOut == 1) {
+				continue;
+			   }  
+			}
+			else {
+				cout<<"You have not booked any room yet."<<endl;
+				continue;
+			}
 		}
 		else if (option == 5) {
 			cout<<"Logout Successfully!";
